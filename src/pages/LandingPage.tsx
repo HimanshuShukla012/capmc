@@ -41,7 +41,7 @@ const LandingPage = () => {
        <section
       className="relative h-screen w-full flex items-center justify-start text-white text-left px-6 md:px-20 overflow-hidden fade-in bg-cover bg-center"
       style={{
-        backgroundImage: "url('/public/img/Hero.png')",
+        backgroundImage: "url('/img/Hero.png')",
       }}
     >
       {/* Gradient Overlay */}
