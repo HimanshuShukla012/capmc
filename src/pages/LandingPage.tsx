@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import gsap from "gsap";
@@ -15,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
   useGSAP(() => {
-    gsap.utils.toArray(".fade-in").forEach((section) => {
+    gsap.utils.toArray<HTMLElement>(".fade-in").forEach((section) => {
       gsap.fromTo(
         section,
         { opacity: 0, y: 100, scale: 0.95 },
