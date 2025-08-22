@@ -18,8 +18,6 @@ import {
   TrendingUp,
   Calculator,
   FileCheck,
-  Building,
-  MapPin,
   Award,
   Zap,
   Target,
@@ -29,7 +27,6 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 const ServicesPage = () => {
-  const heroRef = useRef(null);
   const servicesRef = useRef(null);
   const processRef = useRef(null);
   const benefitsRef = useRef(null);
@@ -51,7 +48,7 @@ const ServicesPage = () => {
     );
 
     // Services Cards Animation
-    const serviceCards = gsap.utils.toArray(".service-card");
+    const serviceCards = gsap.utils.toArray(".service-card") as HTMLElement[];
     gsap.fromTo(
       serviceCards,
       { opacity: 0, y: 60, scale: 0.9 },
@@ -70,7 +67,7 @@ const ServicesPage = () => {
     );
 
     // Process Steps Animation
-    const processSteps = gsap.utils.toArray(".process-step");
+    const processSteps = gsap.utils.toArray(".process-step") as HTMLElement[];
     gsap.fromTo(
       processSteps,
       { opacity: 0, x: -50 },
@@ -88,7 +85,7 @@ const ServicesPage = () => {
     );
 
     // Benefits Animation
-    const benefitItems = gsap.utils.toArray(".benefit-item");
+    const benefitItems = gsap.utils.toArray(".benefit-item") as HTMLElement[];
     gsap.fromTo(
       benefitItems,
       { opacity: 0, y: 30 },
@@ -106,8 +103,8 @@ const ServicesPage = () => {
     );
 
     // Service Cards Hover Effects
-    serviceCards.forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
+    serviceCards.forEach((card: HTMLElement) => {
+      card.addEventListener("mousemove", (e: MouseEvent) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;

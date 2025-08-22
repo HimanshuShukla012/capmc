@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom"; // ⬅️ add this at the top
+import { Link } from "react-router-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { LucideIcon } from "lucide-react";
 import {
   Award,
   Globe,
@@ -15,18 +16,40 @@ import {
   Building2,
   CheckCircle,
   Star,
-  MapPin
+  MapPin,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type Stat = {
+  number: string;
+  label: string;
+  icon: LucideIcon;
+};
+
+type Value = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
+};
+
+type TeamMember = {
+  name: string;
+  title: string;
+  experience: string;
+  specialization: string;
+  desc: string;
+  image: string;
+  achievements: string[];
+};
+
 const AboutUsPage = () => {
-  const heroRef = useRef(null);
-  const statsRef = useRef(null);
-  const storyRef = useRef(null);
-  const valuesRef = useRef(null);
-  const teamRef = useRef(null);
-  const achievementsRef = useRef(null);
+  const statsRef = useRef<HTMLDivElement | null>(null);
+  const storyRef = useRef<HTMLElement | null>(null);
+  const valuesRef = useRef<HTMLElement | null>(null);
+  const teamRef = useRef<HTMLElement | null>(null);
+  const achievementsRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     // Hero Animation
@@ -43,7 +66,7 @@ const AboutUsPage = () => {
     );
 
     // Stats Counter Animation
-    const statsCards = gsap.utils.toArray(".stat-card");
+    const statsCards = gsap.utils.toArray<HTMLDivElement>(".stat-card");
     gsap.fromTo(
       statsCards,
       { opacity: 0, y: 50, scale: 0.9 },
@@ -78,7 +101,7 @@ const AboutUsPage = () => {
     );
 
     // Values Cards Animation
-    const valueCards = gsap.utils.toArray(".value-card");
+    const valueCards = gsap.utils.toArray<HTMLDivElement>(".value-card");
     gsap.fromTo(
       valueCards,
       { opacity: 0, y: 60, scale: 0.95 },
@@ -96,48 +119,67 @@ const AboutUsPage = () => {
       }
     );
 
-    // Team Cards Hover Effects
-    const teamCards = gsap.utils.toArray(".team-card");
+    // Team Cards Hover Effects (typed)
+    const teamCards = gsap.utils.toArray<HTMLDivElement>(".team-card");
+
+    const onMouseMove = (card: HTMLDivElement) => (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty("--x", `${x}px`);
+      card.style.setProperty("--y", `${y}px`);
+
+      const moveX = (x - rect.width / 2) / 20;
+      const moveY = (y - rect.height / 2) / 20;
+
+      gsap.to(card, {
+        rotationY: moveX,
+        rotationX: -moveY,
+        transformPerspective: 1000,
+        transformOrigin: "center",
+        duration: 0.3,
+      });
+    };
+
+    const onMouseLeave = (card: HTMLDivElement) => () => {
+      gsap.to(card, {
+        rotationX: 0,
+        rotationY: 0,
+        scale: 1,
+        duration: 0.5,
+        ease: "power3.out",
+      });
+    };
+
+    const onMouseEnter = (card: HTMLDivElement) => () => {
+      gsap.to(card, {
+        scale: 1.03,
+        duration: 0.4,
+        ease: "power3.out",
+      });
+    };
+
+    // Attach listeners with cleanup references
+    const cleanup: Array<() => void> = [];
+
     teamCards.forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty("--x", `${x}px`);
-        card.style.setProperty("--y", `${y}px`);
+      const move = onMouseMove(card);
+      const leave = onMouseLeave(card);
+      const enter = onMouseEnter(card);
 
-        const moveX = (x - rect.width / 2) / 20;
-        const moveY = (y - rect.height / 2) / 20;
-        gsap.to(card, {
-          rotationY: moveX,
-          rotationX: -moveY,
-          transformPerspective: 1000,
-          transformOrigin: "center",
-          duration: 0.3,
-        });
-      });
+      card.addEventListener("mousemove", move);
+      card.addEventListener("mouseleave", leave);
+      card.addEventListener("mouseenter", enter);
 
-      card.addEventListener("mouseleave", () => {
-        gsap.to(card, {
-          rotationX: 0,
-          rotationY: 0,
-          scale: 1,
-          duration: 0.5,
-          ease: "power3.out",
-        });
-      });
-
-      card.addEventListener("mouseenter", () => {
-        gsap.to(card, {
-          scale: 1.03,
-          duration: 0.4,
-          ease: "power3.out",
-        });
+      cleanup.push(() => {
+        card.removeEventListener("mousemove", move);
+        card.removeEventListener("mouseleave", leave);
+        card.removeEventListener("mouseenter", enter);
       });
     });
 
     // Achievements Animation
-    const achievementItems = gsap.utils.toArray(".achievement-item");
+    const achievementItems = gsap.utils.toArray<HTMLDivElement>(".achievement-item");
     gsap.fromTo(
       achievementItems,
       { opacity: 0, x: -30 },
@@ -153,43 +195,56 @@ const AboutUsPage = () => {
         },
       }
     );
+
+    return () => {
+      cleanup.forEach((fn) => fn());
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+      gsap.killTweensOf(statsCards);
+      gsap.killTweensOf(valueCards);
+      gsap.killTweensOf(teamCards);
+      gsap.killTweensOf(achievementItems);
+    };
   }, []);
 
-  const stats = [
+  const stats: Stat[] = [
     { number: "30+", label: "Years of Experience", icon: Award },
     { number: "500+", label: "Companies Incorporated", icon: Building2 },
     { number: "15+", label: "Countries Served", icon: Globe },
     { number: "98%", label: "Client Satisfaction", icon: Star },
   ];
 
-  const values = [
+  const values: Value[] = [
     {
       title: "Integrity",
-      description: "We uphold the highest standards of honesty and transparency in all our dealings.",
+      description:
+        "We uphold the highest standards of honesty and transparency in all our dealings.",
       icon: Shield,
       color: "#00BFA6",
     },
     {
       title: "Excellence",
-      description: "We strive for perfection in every service we deliver, exceeding client expectations.",
+      description:
+        "We strive for perfection in every service we deliver, exceeding client expectations.",
       icon: Target,
       color: "#FFC72C",
     },
     {
       title: "Innovation",
-      description: "We embrace cutting-edge solutions and creative approaches to complex challenges.",
+      description:
+        "We embrace cutting-edge solutions and creative approaches to complex challenges.",
       icon: Lightbulb,
       color: "#00BFA6",
     },
     {
       title: "Client-Centric",
-      description: "Our clients' success is our priority, and we tailor solutions to their unique needs.",
+      description:
+        "Our clients' success is our priority, and we tailor solutions to their unique needs.",
       icon: Heart,
       color: "#FFC72C",
     },
   ];
 
-  const team = [
+  const team: TeamMember[] = [
     {
       name: "CA Piyush Misra",
       title: "Founder & Director",
@@ -210,7 +265,7 @@ const AboutUsPage = () => {
     },
   ];
 
-  const achievements = [
+  const achievements: string[] = [
     "Premier consultancy firm in UAE with strong presence in India",
     "Successfully incorporated 500+ companies across multiple jurisdictions",
     "Served clients from 15+ countries worldwide",
@@ -218,27 +273,26 @@ const AboutUsPage = () => {
     "Expert in UAE Free Zone, Mainland, and Offshore company formation",
     "Recognized for excellence in AML compliance and regulatory advisory",
     "Strategic partnerships with leading financial institutions",
-    "Pioneered innovative tax planning solutions for international businesses"
+    "Pioneered innovative tax planning solutions for international businesses",
   ];
 
   return (
     <div className="bg-gradient-to-b from-[#000D1A] via-[#001F33] to-[#000814] text-white min-h-screen">
-        <Navbar />
+      <Navbar />
 
-        
       {/* Hero Section */}
-     <section
-      className="relative h-screen w-full flex items-center justify-center text-white text-center px-6 md:px-20 overflow-hidden fade-in bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/public/img/about.jpg')",
-      }}
-    >
+      <section
+        className="relative h-screen w-full flex items-center justify-center text-white text-center px-6 md:px-20 overflow-hidden fade-in bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/public/img/about.jpg')",
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-[#001F33] via-[#000f1d] to-[#000814] opacity-90 pointer-events-none z-0" />
-        
+
         {/* Floating Elements */}
         <div className="absolute w-96 h-96 bg-[#00BFA6]/10 rounded-full blur-3xl top-20 left-10 z-0" />
         <div className="absolute w-72 h-72 bg-[#FFC72C]/10 rounded-full blur-3xl bottom-20 right-10 z-0" />
-        
+
         <div className="hero-content relative z-10 max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-8 text-white leading-tight">
             About <span className="text-[#00BFA6]">CAPMC</span>
@@ -258,10 +312,7 @@ const AboutUsPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section
-        ref={statsRef}
-        className="relative py-20 px-6 md:px-24 bg-[#000814]"
-      >
+      <section ref={statsRef} className="relative py-20 px-6 md:px-24 bg-[#000814]">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
@@ -282,12 +333,9 @@ const AboutUsPage = () => {
       </section>
 
       {/* Our Story Section */}
-      <section
-        ref={storyRef}
-        className="relative py-24 px-6 md:px-24 bg-[#000D1A]"
-      >
+      <section ref={storyRef} className="relative py-24 px-6 md:px-24 bg-[#000D1A]">
         <div className="absolute inset-0 bg-gradient-to-br from-[#001F33] via-[#00121d] to-[#000814] opacity-90 z-0 pointer-events-none" />
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="story-content">
             <h2 className="text-4xl md:text-5xl font-extrabold mb-8 text-white">
@@ -303,7 +351,7 @@ const AboutUsPage = () => {
               Our commitment to excellence, combined with deep market knowledge and innovative solutions, has made us the preferred partner for businesses seeking to establish and grow their operations in the UAE and beyond.
             </p>
           </div>
-          
+
           <div className="relative">
             <div className="absolute w-80 h-80 rounded-3xl bg-[#00BFA6]/10 blur-3xl z-0" />
             <div className="relative bg-black/20 backdrop-blur-xl border border-[#00BFA6]/30 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,191,166,0.15)] z-10">
@@ -331,14 +379,11 @@ const AboutUsPage = () => {
       </section>
 
       {/* Values Section */}
-      <section
-        ref={valuesRef}
-        className="relative py-24 px-6 md:px-24 bg-[#000814]"
-      >
+      <section ref={valuesRef} className="relative py-24 px-6 md:px-24 bg-[#000814]">
         <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-white">
           Our <span className="text-[#00BFA6]">Core Values</span>
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {values.map((value, index) => {
             const Icon = value.icon;
@@ -355,12 +400,8 @@ const AboutUsPage = () => {
                     <Icon size={32} style={{ color: value.color }} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-semibold mb-3 text-white">
-                      {value.title}
-                    </h3>
-                    <p className="text-gray-300 leading-relaxed">
-                      {value.description}
-                    </p>
+                    <h3 className="text-2xl font-semibold mb-3 text-white">{value.title}</h3>
+                    <p className="text-gray-300 leading-relaxed">{value.description}</p>
                   </div>
                 </div>
               </div>
@@ -370,16 +411,13 @@ const AboutUsPage = () => {
       </section>
 
       {/* Leadership Team */}
-      <section
-        ref={teamRef}
-        className="relative py-24 px-6 md:px-24 bg-[#000D1A]"
-      >
+      <section ref={teamRef} className="relative py-24 px-6 md:px-24 bg-[#000D1A]">
         <div className="absolute inset-0 bg-gradient-to-br from-[#001F33] via-[#00121d] to-[#000814] opacity-90 z-0 pointer-events-none" />
-        
+
         <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-[#FFC72C] relative z-10">
           Leadership Excellence
         </h2>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
           {team.map((member, index) => (
             <div
@@ -390,28 +428,18 @@ const AboutUsPage = () => {
                 <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
                   <div className="relative">
                     <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-[#FFC72C] shadow-lg">
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-3xl font-bold text-[#FFC72C] mb-2">
-                      {member.name}
-                    </h3>
-                    <p className="text-xl text-white font-semibold mb-1">
-                      {member.title}
-                    </p>
+                    <h3 className="text-3xl font-bold text-[#FFC72C] mb-2">{member.name}</h3>
+                    <p className="text-xl text-white font-semibold mb-1">{member.title}</p>
                     <p className="text-[#00BFA6] font-medium mb-2">
                       {member.experience} • {member.specialization}
                     </p>
-                    <p className="text-gray-300 leading-relaxed mb-6">
-                      {member.desc}
-                    </p>
-                    
+                    <p className="text-gray-300 leading-relaxed mb-6">{member.desc}</p>
+
                     <div className="space-y-2">
                       {member.achievements.map((achievement, idx) => (
                         <div key={idx} className="flex items-center justify-center md:justify-start space-x-2">
@@ -429,15 +457,12 @@ const AboutUsPage = () => {
       </section>
 
       {/* Achievements Section */}
-      <section
-        ref={achievementsRef}
-        className="relative py-24 px-6 md:px-24 bg-[#000814]"
-      >
+      <section ref={achievementsRef} className="relative py-24 px-6 md:px-24 bg-[#000814]">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-white">
             Our <span className="text-[#00BFA6]">Achievements</span>
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {achievements.map((achievement, index) => (
               <div
@@ -454,9 +479,7 @@ const AboutUsPage = () => {
 
       {/* Call to Action */}
       <section className="relative py-20 px-6 md:px-24 bg-gradient-to-r from-[#00BFA6] to-[#009982] text-center">
-        <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-white">
-          Ready to Start Your Journey?
-        </h2>
+        <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-white">Ready to Start Your Journey?</h2>
         <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
           Partner with CAPMC and transform your business vision into reality with our expert guidance and comprehensive solutions.
         </p>
@@ -468,11 +491,11 @@ const AboutUsPage = () => {
             Get Started Today
           </a>
           <Link
-  to="/services"
-  className="border-2 border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-[#00BFA6] transition duration-300"
->
-  Explore Services
-</Link>
+            to="/services"
+            className="border-2 border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-[#00BFA6] transition duration-300"
+          >
+            Explore Services
+          </Link>
         </div>
       </section>
     </div>
