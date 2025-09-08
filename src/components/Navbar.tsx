@@ -41,16 +41,16 @@ const NavBar = () => {
       if (navRef.current) {
         if (currentScrollY <= 0) {
           setIsNavVisible(true);
-          navRef.current.classList.remove("bg-black/50");
-          navRef.current.classList.add("bg-transparent");
+          navRef.current.classList.remove("bg-white/90", "shadow-lg");
+          navRef.current.classList.add("bg-white/50");
         } else if (direction === "down") {
           setIsNavVisible(false);
-          navRef.current.classList.remove("bg-transparent");
-          navRef.current.classList.add("bg-black/50");
+          navRef.current.classList.remove("bg-white/50");
+          navRef.current.classList.add("bg-white/90", "shadow-lg");
         } else if (direction === "up") {
           setIsNavVisible(true);
-          navRef.current.classList.remove("bg-transparent");
-          navRef.current.classList.add("bg-black/50");
+          navRef.current.classList.remove("bg-white/50");
+          navRef.current.classList.add("bg-white/90", "shadow-lg");
         }
       }
 
@@ -80,22 +80,22 @@ const NavBar = () => {
       {/* Main Navbar */}
       <div
         ref={navRef}
-        className="fixed inset-x-0 top-4 z-50 h-24 border-none transition-all duration-700 sm:inset-x-6 bg-transparent backdrop-blur-md rounded-xl"
+        className="fixed inset-x-0 top-4 z-50 h-24 border border-gray-200/30 transition-all duration-700 sm:inset-x-6 bg-white/50 backdrop-blur-md rounded-xl"
       >
         <header className="absolute top-1/2 w-full -translate-y-1/2">
           <nav className="flex size-full items-center justify-between p-4">
             <div className="flex items-center gap-4">
               <Link to="/" className="flex items-center gap-4">
                 <img
-                  src="/img/logo.png"
+                  src="/img/logo dark.png"
                   alt="logo"
                   className="w-20 cursor-pointer"
                 />
                 <div className="leading-tight">
-                  <div className="text-white font-bold uppercase tracking-wide text-sm sm:text-base">
+                  <div className="text-gray-800 font-bold uppercase tracking-wide text-sm sm:text-base">
                     CAPMC CORPORATE CONSULTANCY SERVICES
                   </div>
-                  <div className="text-white uppercase text-[10px] sm:text-xs font-semibold">
+                  <div className="text-gray-600 uppercase text-[10px] sm:text-xs font-semibold">
                     LLC. FZ.
                   </div>
                 </div>
@@ -109,7 +109,8 @@ const NavBar = () => {
                   <Link
                     key={index}
                     to={`/${item.toLowerCase()}`}
-                    className="nav-hover-btn"
+                    className="nav-hover-btn !text-gray-800 hover:!text-[#FF8C00]"
+                    style={{ color: '#1f2937 !important' }}
                   >
                     {item}
                   </Link>
@@ -128,7 +129,7 @@ const NavBar = () => {
                 {[1, 2, 3, 4].map((bar) => (
                   <div
                     key={bar}
-                    className={clsx("indicator-line", {
+                    className={clsx("indicator-line bg-gray-600", {
                       active: isIndicatorActive,
                     })}
                     style={{ animationDelay: `${bar * 0.1}s` }}
@@ -140,7 +141,7 @@ const NavBar = () => {
             {/* Mobile Hamburger */}
             <button
               onClick={toggleMobileMenu}
-              className="md:hidden text-white text-3xl z-50 relative"
+              className="md:hidden text-gray-800 text-3xl z-50 relative hover:text-[#FF8C00] transition-colors duration-300"
             >
               {isMobileMenuOpen ? <HiX /> : <HiMenu />}
             </button>
@@ -150,13 +151,13 @@ const NavBar = () => {
 
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed top-[72px] left-0 w-full h-[calc(100vh-72px)] bg-black/50 backdrop-blur-md z-40 flex flex-col px-8 pt-10 space-y-8">
+        <div className="fixed top-[72px] left-0 w-full h-[calc(100vh-72px)] bg-white/95 backdrop-blur-md z-40 flex flex-col px-8 pt-10 space-y-8 border-t border-gray-200/30">
           {navItems.map((item, index) => (
             <Link
               key={index}
               to={`/${item.toLowerCase()}`}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-white text-2xl font-semibold border-b border-white/20 pb-2"
+              className="text-gray-800 text-2xl font-semibold border-b border-gray-200/30 pb-2 hover:text-[#FF8C00] transition-colors duration-300"
             >
               {item}
             </Link>
@@ -174,13 +175,13 @@ const NavBar = () => {
               {[1, 2, 3, 4].map((bar) => (
                 <div
                   key={bar}
-                  className={clsx("indicator-line", {
+                  className={clsx("indicator-line bg-gray-600", {
                     active: isIndicatorActive,
                   })}
                   style={{ animationDelay: `${bar * 0.1}s` }}
                 />
               ))}
-              <span className="ml-3 text-white">Background Audio</span>
+              <span className="ml-3 text-gray-800">Background Audio</span>
             </button>
           </div>
         </div>

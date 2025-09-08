@@ -35,45 +35,40 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-b from-[#000D1A] via-[#001F33] to-[#000814] text-gray-100 scroll-smooth">
+    <div className="bg-gradient-to-b from-gray-50 via-white to-gray-100 text-gray-800 scroll-smooth">
       <Navbar />
 
-       <section
-      className="relative h-screen w-full flex items-center justify-start text-white text-left px-6 md:px-20 overflow-hidden fade-in bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/public/img/Hero.png')",
-      }}
-    >
-      {/* Gradient Overlay */}
+      <section
+        className="relative h-screen w-full flex items-center justify-start text-left px-6 md:px-20 overflow-hidden fade-in bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/img/Hero.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+        }}
+      >
+        {/* Content - Directly on image without box */}
+        <div className="z-10 max-w-2xl text-left">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] leading-tight">
+            Strategizing Success for Global Business Dreams
+          </h1>
+          <p className="text-lg md:text-xl text-white font-medium leading-relaxed mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+            At CAPMC, we specialize in cross-border business setup, taxation, and financial advisory with a commitment to excellence and trust across UAE & beyond.
+          </p>
+          <a
+            href="#contact"
+            className="inline-block bg-[#FF8C00] text-white font-bold px-8 py-4 rounded-full shadow-xl hover:bg-[#e67e00] transition duration-300 hover:shadow-2xl transform hover:scale-105"
+          >
+            Get Expert Advice →
+          </a>
+        </div>
 
-      
-
-      {/* Blurred Glow Element */}
-      <div className="absolute w-[600px] h-[600px] bg-[#FFB400]/10 rounded-full blur-[120px] left-[25%] top-1/2 -translate-y-1/2 z-0" />
-
-      {/* Content */}
-      <div className="z-10 max-w-2xl text-left p-6 md:p-14 rounded-[2rem]">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-[#FFB400] drop-shadow-[0_0_30px_rgba(255,180,0,0.4)]">
-          Strategizing Success for Global Business Dreams
-        </h1>
-        <p className="text-lg md:text-xl text-gray-100 font-medium leading-relaxed">
-          At CAPMC, we specialize in cross-border business setup, taxation, and financial advisory with a commitment to excellence and trust across UAE & beyond.
-        </p>
-        <a
-          href="#contact"
-          className="mt-8 inline-block bg-[#FFB400] text-black font-bold px-6 py-3 rounded-full shadow-lg hover:bg-[#e6a700] transition duration-300"
-        >
-          Get Expert Advice →
-        </a>
-      </div>
-
-      {/* Decorative Bottom Line */}
-      <div className="absolute bottom-10 w-full text-left pl-6 md:pl-20 z-10">
-        <span className="text-sm text-white/50 tracking-widest uppercase">
-          Trusted by Visionaries | Driven by Excellence
-        </span>
-      </div>
-    </section>
+        {/* Decorative Bottom Line */}
+        <div className="absolute bottom-10 w-full text-left pl-6 md:pl-20 z-10">
+          <span className="text-sm text-white tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+            Trusted by Visionaries | Driven by Excellence
+          </span>
+        </div>
+      </section>
 
       <div className="space-y-24 md:space-y-32 pt-20">
         <AboutSection />
