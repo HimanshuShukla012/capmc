@@ -15,7 +15,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-gray-300">
           {/* Company Overview */}
           <div>
-            <img src="public/img/logo.png" alt="CAPMC Logo" className="h-14 mb-4" />
+            <img src="public/img/logo dark.png" alt="CAPMC Logo" className="h-14 mb-4" />
             <p className="text-gray-600 text-sm">
               CAPMC Corporate Consultancy Services is your trusted partner in setting up and scaling your business in the UAE. We simplify the journey with tailored legal, financial, and compliance solutions.
             </p>
