@@ -7,7 +7,8 @@ import AboutUsPage from "./pages/aboutpage";
 import ServicesPage from "./pages/servicepage";
 
 // Create global audio instance that persists across route changes
-const globalAudio = new Audio('/audio/loop.mp3');
+const globalAudio = new Audio('/videos/audio/loop.mp3');
+
 globalAudio.loop = true;
 
 // Define the audio props interface
