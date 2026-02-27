@@ -30,6 +30,7 @@ import {
   Eye,
   Compass
 } from "lucide-react";
+import { Helmet } from 'react-helmet-async';
 
 // Enhanced Team Section Component (keeping your existing team section)
 const team = [
@@ -436,6 +437,13 @@ const AboutUsPage = () => {
 
   return (
     <div className="bg-white text-gray-900 min-h-screen overflow-hidden">
+      <Helmet>
+  <title>About CAPMC | Trusted CA Firm Dubai Since 1990s | 500+ Companies</title>
+  <meta name="description" content="Learn about CAPMC LLC FZ — founded in the 1990s by CA Piyush Misra. 30+ years of expertise in UAE business setup, taxation and financial advisory. 500+ companies formed." />
+  <link rel="canonical" href="https://capmc.ae/about" />
+  <meta property="og:title" content="About CAPMC | CA Firm Dubai Since 1990s" />
+  <meta property="og:url" content="https://capmc.ae/about" />
+</Helmet>
       <NavBar />
       {/* Professional Hero Section */}
       <section

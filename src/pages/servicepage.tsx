@@ -32,6 +32,8 @@ import {
   Sparkles,
   Menu
 } from "lucide-react";
+import { Helmet } from 'react-helmet-async';
+
 
 const ServicesPage = () => {
   const [selectedService, setSelectedService] = useState(0);
@@ -505,6 +507,13 @@ const ServicesPage = () => {
 
   return (
     <div className="bg-white text-gray-900 min-h-screen overflow-hidden">
+      <Helmet>
+  <title>Business Setup Services Dubai | UAE Company Formation | CAPMC</title>
+  <meta name="description" content="Explore CAPMC's full range of services — business setup, VAT compliance, Virtual CFO, AML compliance & accounting in Dubai UAE. Starting from AED 1,500." />
+  <link rel="canonical" href="https://capmc.ae/services" />
+  <meta property="og:title" content="Business Setup Services Dubai | CAPMC" />
+  <meta property="og:url" content="https://capmc.ae/services" />
+</Helmet>
       <NavBar />
       
       

@@ -18,6 +18,8 @@ import {
   Calendar,
   Headphones
 } from "lucide-react";
+import { Helmet } from 'react-helmet-async';
+
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -187,6 +189,14 @@ const ContactPage = () => {
 
   return (
     <div className="bg-white text-gray-900 min-h-screen overflow-hidden">
+      <Helmet>
+  <title>Contact CAPMC | Free Business Setup Consultation Dubai</title>
+  <meta name="description" content="Contact CAPMC LLC FZ for a free consultation on UAE business setup, company formation & financial services. Call +971 529 283 063 or visit Al Durrah Tower, Dubai." />
+  <link rel="canonical" href="https://capmc.ae/contact" />
+  <meta property="og:title" content="Contact CAPMC | Free Consultation Dubai" />
+  <meta property="og:url" content="https://capmc.ae/contact" />
+</Helmet>
+      
       <NavBar />
       
       {/* Professional Hero Section */}

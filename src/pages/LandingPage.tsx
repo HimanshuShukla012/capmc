@@ -9,6 +9,7 @@ import WhyUaeSection from "../components/WhyUaeSection";
 import TeamSection from "../components/TeamSection";
 import AboutSection from "../components/AboutSection";
 import FaqSection from "../components/FaqSection";
+import { Helmet } from 'react-helmet-async';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,6 +37,13 @@ const LandingPage = () => {
 
   return (
     <div className="bg-gradient-to-b from-gray-50 via-white to-gray-100 text-gray-800 scroll-smooth">
+      <Helmet>
+  <title>CAPMC LLC FZ | Business Setup Dubai & UAE Company Formation</title>
+  <meta name="description" content="CAPMC LLC FZ — Dubai's trusted CA firm for UAE company formation, business setup, VAT compliance, Virtual CFO & AML services. 500+ companies. Free consultation." />
+  <link rel="canonical" href="https://capmc.ae/" />
+  <meta property="og:title" content="CAPMC LLC FZ | Business Setup Dubai" />
+  <meta property="og:url" content="https://capmc.ae/" />
+</Helmet>
       <Navbar />
 
       <section
