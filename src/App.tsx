@@ -5,6 +5,9 @@ import LandingPage from "./pages/LandingPage";
 import ContactPage from "./pages/contactpage";
 import AboutUsPage from "./pages/aboutpage";
 import ServicesPage from "./pages/servicepage";
+import LandingPageSEO from "./pages/LandingPageSEO"
+import { getAllLandingPages } from "./data/seo-pages"
+
 
 // Create global audio instance that persists across route changes
 const globalAudio = new Audio('/videos/audio/loop.mp3');
@@ -76,6 +79,8 @@ function App() {
         <Route path="/about" element={<AboutUsPage audioProps={audioProps} />} />
         <Route path="/services" element={<ServicesPage audioProps={audioProps} />} />
         <Route path="/contact" element={<ContactPage audioProps={audioProps} />} />
+        <Route path="/:slug" element={<LandingPageSEO />} />
+
       </Routes>
     </Router>
   );
